@@ -2425,16 +2425,6 @@ export function GlobeScene({ state }: { state: OloLinkState }) {
         </LodContext.Provider>
       </Canvas>
 
-      {/* single compact camera control — rendered into the top navigation bar */}
-      {menuSlot &&
-        createPortal(
-          <ViewMenu
-            preset={preset}
-            onSelect={goTo}
-            tier={`${LOD_LABEL[lod.level]}${lod.region ? ` · ${REGION_BY_ID[lod.region]?.short}` : ''}`}
-          />,
-          menuSlot
-        )}
 
 
     </LabelLayer>
