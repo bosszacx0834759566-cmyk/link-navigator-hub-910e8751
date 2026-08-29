@@ -86,8 +86,8 @@ function Explorer() {
 
 
       {/* LEVEL 2 — brand strip + system tab rail */}
-      <SystemHeader state={state} />
-      <SystemRail active={state.panel} onToggle={state.togglePanel} />
+      <SystemHeader />
+      <SystemRail state={state} />
 
       {/* LEVEL 3 — slide-out data panel for the active tab */}
       <SystemPanel state={state} />
