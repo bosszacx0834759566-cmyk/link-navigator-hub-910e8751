@@ -16,7 +16,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { OloLinkState, RailId } from '@/hooks/use-ololink';
-import { SCENARIO_ORDER, type ScenarioId } from '@/lib/ololink';
+import { type ScenarioId } from '@/lib/ololink';
 
 /** Scenario simulation entries shown in the rail. */
 const SCENARIOS_RAIL: { id: ScenarioId; label: string; hint: string; icon: LucideIcon }[] = [
