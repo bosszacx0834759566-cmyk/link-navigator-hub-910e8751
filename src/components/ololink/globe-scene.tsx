@@ -1,7 +1,7 @@
 'use client';
 
 import { Canvas, useFrame, useLoader, useThree, type ThreeEvent } from '@react-three/fiber';
-import { createPortal } from 'react-dom';
+
 import { Html, OrbitControls, Stars } from '@react-three/drei';
 import {
   createContext,
@@ -35,7 +35,7 @@ import {
 import type { OloLinkState, Selection } from '@/hooks/use-ololink';
 import { LabelLayer, LabelProjector, useLabel } from '@/components/ololink/label-layer';
 import {
-  CAMERA_PRESETS,
+  
   OPERATIONAL_VIEW,
   fitView,
   pointView,
@@ -47,7 +47,7 @@ import {
 import {
   LAYER,
   LAYER_STACK,
-  LOD_LABEL,
+  
   REGIONS,
   REGION_BY_ID,
   assetVec,
@@ -2302,17 +2302,8 @@ export function GlobeScene({ state }: { state: OloLinkState }) {
   const [lod, setLod] = useState<LodState>({ level: 'global', region: null });
   const onLod = useMemo(() => (s: LodState) => setLod(s), []);
   const [preset, setPreset] = useState<PresetId | null>(null);
-  const [presetSeq, setPresetSeq] = useState(0);
-  const [menuSlot, setMenuSlot] = useState<HTMLElement | null>(null);
+  const [presetSeq] = useState(0);
 
-  useEffect(() => {
-    setMenuSlot(document.getElementById('ololink-view-menu-slot'));
-  }, []);
-
-  const goTo = (id: PresetId) => {
-    setPreset(id);
-    setPresetSeq((n) => n + 1);
-  };
 
   return (
     <LabelLayer tier={lod.level}>
