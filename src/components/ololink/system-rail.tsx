@@ -89,16 +89,62 @@ function RailButton({
   );
 }
 
-/** LEVEL 2 — the system tab rail, docked to the left edge. */
-export function SystemRail({
-  active,
-  onToggle,
+function ScenarioRailButton({
+  item,
+  isActive,
+  disabled,
+  onSelect,
 }: {
-  active: RailId | null;
-  onToggle: (id: RailId) => void;
+  item: (typeof SCENARIOS_RAIL)[number];
+  isActive: boolean;
+  disabled: boolean;
+  onSelect: (id: ScenarioId) => void;
 }) {
+  const Icon = item.icon;
   return (
-    <nav className="pointer-events-auto absolute bottom-0 left-0 top-12 z-40 flex w-[68px] flex-col items-center gap-1.5 border-r border-white/[0.06] bg-black/65 py-3 backdrop-blur-xl">
+    <button
+      type="button"
+      onClick={() => onSelect(item.id)}
+      disabled={disabled}
+      aria-label={item.label}
+      aria-pressed={isActive}
+      className={cn(
+        'group relative flex h-[58px] w-[58px] flex-col items-center justify-center gap-1 rounded-[12px] outline-none transition-all duration-150',
+        'focus-visible:ring-1 focus-visible:ring-sky-400/60 disabled:opacity-50',
+        isActive
+          ? 'bg-sky-500/[0.14] text-sky-300'
+          : 'text-muted-foreground/60 hover:bg-white/[0.05] hover:text-foreground active:scale-[0.96]'
+      )}
+    >
+      <Icon className="h-[18px] w-[18px]" strokeWidth={1.5} />
+      <span className="font-mono text-[8px] uppercase tracking-[0.16em]">{item.label}</span>
+
+      <span
+        className={cn(
+          'absolute left-0 top-1/2 w-[2px] -translate-y-1/2 rounded-r bg-sky-400 transition-all duration-200',
+          isActive ? 'h-7 opacity-100' : 'h-0 opacity-0'
+        )}
+      />
+
+      <span className="pointer-events-none absolute left-[64px] z-50 hidden -translate-x-1 whitespace-nowrap rounded-md border border-white/[0.08] bg-[#0a0f1c]/95 px-2.5 py-1.5 opacity-0 shadow-[0_10px_30px_-12px_rgba(0,0,0,0.9)] backdrop-blur-xl transition-all duration-150 group-hover:translate-x-0 group-hover:opacity-100 md:block">
+        <span className="block text-[10px] uppercase tracking-[0.2em] text-foreground">
+          Scenario · {item.label}
+        </span>
+        <span className="mt-0.5 block text-[9px] tracking-wide text-muted-foreground/70">
+          {item.hint}
+        </span>
+      </span>
+    </button>
+  );
+}
+
+/** LEVEL 2 — the system tab rail, docked to the left edge. */
+export function SystemRail({ state }: { state: OloLinkState }) {
+  const active = state.panel;
+  const onToggle = state.togglePanel;
+
+  return (
+    <nav className="pointer-events-auto absolute bottom-0 left-0 top-12 z-40 flex w-[68px] flex-col items-center gap-1.5 overflow-y-auto border-r border-white/[0.06] bg-black/65 py-3 backdrop-blur-xl [scrollbar-width:none]">
       {SYSTEM_TABS.map((item, i) => (
         <div key={item.id} className={item.id === 'settings' ? 'mt-auto' : undefined}>
           <RailButton
@@ -109,6 +155,22 @@ export function SystemRail({
           />
         </div>
       ))}
+
+      {/* scenario simulation section */}
+      <div className="mt-2 flex flex-col items-center gap-1.5 border-t border-white/[0.06] pt-2">
+        <span className="font-mono text-[7px] uppercase tracking-[0.22em] text-muted-foreground/50">
+          WX
+        </span>
+        {SCENARIOS_RAIL.map((item) => (
+          <ScenarioRailButton
+            key={item.id}
+            item={item}
+            isActive={state.scenarioId === item.id}
+            disabled={state.aiProcessing}
+            onSelect={state.setScenario}
+          />
+        ))}
+      </div>
     </nav>
   );
 }
