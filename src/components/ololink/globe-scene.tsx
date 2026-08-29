@@ -1,7 +1,7 @@
 'use client';
 
 import { Canvas, useFrame, useLoader, useThree, type ThreeEvent } from '@react-three/fiber';
-import { createPortal } from 'react-dom';
+
 import { Html, OrbitControls, Stars } from '@react-three/drei';
 import {
   createContext,
@@ -35,7 +35,7 @@ import {
 import type { OloLinkState, Selection } from '@/hooks/use-ololink';
 import { LabelLayer, LabelProjector, useLabel } from '@/components/ololink/label-layer';
 import {
-  CAMERA_PRESETS,
+  
   OPERATIONAL_VIEW,
   fitView,
   pointView,
@@ -47,7 +47,7 @@ import {
 import {
   LAYER,
   LAYER_STACK,
-  LOD_LABEL,
+  
   REGIONS,
   REGION_BY_ID,
   assetVec,
@@ -2296,112 +2296,14 @@ function SceneContent({
   );
 }
 
-function ViewMenu({
-  preset,
-  onSelect,
-  tier,
-}: {
-  preset: PresetId | null;
-  onSelect: (id: PresetId) => void;
-  tier: string;
-}) {
-  const [open, setOpen] = useState(false);
-  const wrap = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!open) return;
-    const onDoc = (e: MouseEvent) => {
-      if (!wrap.current?.contains(e.target as Node)) setOpen(false);
-    };
-    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false);
-    document.addEventListener('mousedown', onDoc);
-    document.addEventListener('keydown', onKey);
-    return () => {
-      document.removeEventListener('mousedown', onDoc);
-      document.removeEventListener('keydown', onKey);
-    };
-  }, [open]);
-
-  const pick = (id: PresetId) => {
-    onSelect(id);
-    setOpen(false);
-  };
-
-  return (
-    <div ref={wrap} className="relative">
-      <button
-        type="button"
-        aria-haspopup="menu"
-        aria-expanded={open}
-        onClick={() => setOpen((o) => !o)}
-        className="flex items-center gap-2 rounded-[8px] border border-white/[0.08] bg-[#070b14]/75 px-3 py-1.5 font-mono text-[9px] uppercase tracking-[0.22em] text-sky-100/80 backdrop-blur-md transition-colors hover:border-sky-300/40 hover:text-sky-100"
-      >
-        View
-        <span className="text-[8px] text-sky-200/70" aria-hidden>
-          ▾
-        </span>
-      </button>
-
-      {open && (
-        <div
-          role="menu"
-          className="absolute right-0 top-[40px] w-[200px] overflow-hidden rounded-[10px] border border-white/[0.08] bg-[#070b14]/95 py-1 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.95)] backdrop-blur-xl"
-        >
-          {CAMERA_PRESETS.map((p) => (
-            <button
-              key={p.id}
-              type="button"
-              role="menuitem"
-              title={p.hint}
-              onClick={() => pick(p.id)}
-              className={`flex w-full items-center justify-between px-3 py-1.5 text-left font-mono text-[9px] uppercase tracking-[0.18em] transition-colors ${
-                preset === p.id
-                  ? 'bg-sky-400/[0.14] text-sky-100'
-                  : 'text-sky-100/60 hover:bg-white/[0.05] hover:text-sky-100'
-              }`}
-            >
-              {p.label} View
-            </button>
-          ))}
-          <span className="my-1 block h-px bg-white/[0.07]" />
-          <button
-            type="button"
-            role="menuitem"
-            title="Return to the optimal readable operational angle"
-            onClick={() => pick('global')}
-            className="block w-full px-3 py-1.5 text-left font-mono text-[9px] uppercase tracking-[0.18em] text-sky-200/70 transition-colors hover:bg-white/[0.05] hover:text-sky-100"
-          >
-            Reset Operational View
-          </button>
-          <span className="my-1 block h-px bg-white/[0.07]" />
-          <div className="flex items-center justify-between px-3 py-1.5">
-            <span className="font-mono text-[8px] uppercase tracking-[0.24em] text-muted-foreground/50">
-              Tier
-            </span>
-            <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-sky-100/70">{tier}</span>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
 
 
 export function GlobeScene({ state }: { state: OloLinkState }) {
   const [lod, setLod] = useState<LodState>({ level: 'global', region: null });
   const onLod = useMemo(() => (s: LodState) => setLod(s), []);
   const [preset, setPreset] = useState<PresetId | null>(null);
-  const [presetSeq, setPresetSeq] = useState(0);
-  const [menuSlot, setMenuSlot] = useState<HTMLElement | null>(null);
+  const [presetSeq] = useState(0);
 
-  useEffect(() => {
-    setMenuSlot(document.getElementById('ololink-view-menu-slot'));
-  }, []);
-
-  const goTo = (id: PresetId) => {
-    setPreset(id);
-    setPresetSeq((n) => n + 1);
-  };
 
   return (
     <LabelLayer tier={lod.level}>
@@ -2425,16 +2327,6 @@ export function GlobeScene({ state }: { state: OloLinkState }) {
         </LodContext.Provider>
       </Canvas>
 
-      {/* single compact camera control — rendered into the top navigation bar */}
-      {menuSlot &&
-        createPortal(
-          <ViewMenu
-            preset={preset}
-            onSelect={goTo}
-            tier={`${LOD_LABEL[lod.level]}${lod.region ? ` · ${REGION_BY_ID[lod.region]?.short}` : ''}`}
-          />,
-          menuSlot
-        )}
 
 
     </LabelLayer>
