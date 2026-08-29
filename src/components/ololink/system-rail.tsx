@@ -8,10 +8,23 @@ import {
   Search,
   Globe2,
   Settings2,
+  Sun,
+  Cloud,
+  CloudRain,
+  CloudLightning,
   type LucideIcon,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import type { RailId } from '@/hooks/use-ololink';
+import type { OloLinkState, RailId } from '@/hooks/use-ololink';
+import { SCENARIO_ORDER, type ScenarioId } from '@/lib/ololink';
+
+/** Scenario simulation entries shown in the rail. */
+const SCENARIOS_RAIL: { id: ScenarioId; label: string; hint: string; icon: LucideIcon }[] = [
+  { id: 'clear', label: 'Clear', hint: 'จำลองสภาพอากาศแจ่มใส', icon: Sun },
+  { id: 'cloud', label: 'Cloud', hint: 'จำลองเมฆปกคลุม', icon: Cloud },
+  { id: 'rain', label: 'Rain', hint: 'จำลองฝนตกหนัก', icon: CloudRain },
+  { id: 'storm', label: 'Storm', hint: 'จำลองพายุรุนแรง', icon: CloudLightning },
+];
 
 export const SYSTEM_TABS: {
   id: RailId;
